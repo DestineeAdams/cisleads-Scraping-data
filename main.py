@@ -1,6 +1,7 @@
 import os, time
 from playwright.sync_api import sync_playwright 
 from dotenv import load_dotenv
+import getCompanyNames as gcn
 
 load_dotenv()  # take environment variables from .env.
 
@@ -17,7 +18,7 @@ with sync_playwright() as p:
     page.click('#buttonLogin')
     time.sleep(5)
 
-    # start serach 
+    # fill out se
     page.goto("https://cisleads.com/desktop")
     page.get_by_title('GCs & Subs').click()
 
