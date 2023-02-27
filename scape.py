@@ -10,34 +10,42 @@ load_dotenv()  # take environment variables from .env.
 # the vars will be passed in by the user later
 gcn = fillSheet('Perfetto Bid History Template.xlsx', "Competitor Analysis")
 
-lowbidsValues = []
-otherbidsValues = []
+# lowbidsValues = []
+# otherbidsValues = []
 
 
 
-def getvalues(ItemsTotal):
+def getvalues():
+    # max out results show
+    TotalItems = int(page.locator("span.number-total").first.text_content())
+    print(TotalItems)
 
-    tablehtml = page.inner_html("xpath=/html/body/section/div[3]/div[2]/div[2]/div/table")
-    soup = bs(tablehtml, "html.parser")
-    rows = soup.find_all('strong')
+    page.locator("xpath=/html/body/section/div[3]/div[2]/div[2]/div/div[1]/span[2]/a[3]").click()
 
+    # tablehtml = []
+        
+    # page.locator("xpath=/html/body/section/div[3]/div[2]/div[2]/div/div[2]/div/ul/li[4]/a").first.click()
+
+    for i in range(1, TotalItems+1):
+        tablehtml = page.inner_html("tr").nth(i).get_content()
+
+    print(rows)
     print(len(rows))
 
-    for row in rows:
-      dic = {}
-      dic["amount"] = row.get_text()
+    # dic = []
+    # for row in rows:
+    #     currNum = int(re.sub('[$,]', '', row.get_text()))
+    #     dic.append(currNum)
 
-      lowbidsValues.append(dic)
-      
-
-    print(lowbidsValues)
-    return lowbidsValues
+    # bids = sum(dic)
+    # print(bids)
+    # # return bids
 
 
 
 with sync_playwright() as p:
-    # browser = p.chromium.launch(headless=False, slow_mo=50)
-    browser = p.chromium.launch(headless=True)
+    browser = p.chromium.launch(headless=False, slow_mo=50)
+    # browser = p.chromium.launch(headless=True)
 
     page = browser.new_page()
 
@@ -70,13 +78,8 @@ with sync_playwright() as p:
 
     time.sleep(2)
 
-    # max out results show
-    page.locator("span.num-page").locator("a").last.click()
-    
-    TotalItems = int(page.locator("span.number-total").first.text_content())
-    print(TotalItems)
 
-    getvalues(TotalItems)
+    getvalues()
 
 
     # # page.keyboard.press("Control+KeyR")
@@ -99,14 +102,4 @@ with sync_playwright() as p:
     time.sleep(5)
     
 
-
-def setlowbidvalue(args):
-    sums = 0
-    for x in range(len(lowbidsValues)):
-    
-    currnum = re.sub('[$,]', '', lowbidsValues[x]['amount']) 
-    currnum = int(currnum)
-    sums = sums + currnum
-
-    gcn.updateCell(self, e3, sums)
 
