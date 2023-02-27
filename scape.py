@@ -3,24 +3,36 @@ import pandas as pd
 from playwright.sync_api import sync_playwright 
 from dotenv import load_dotenv
 from fillSheet import *
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup as bs
 
 load_dotenv()  # take environment variables from .env.
 
 # the vars will be passed in by the user later
 gcn = fillSheet('Perfetto Bid History Template.xlsx', "Competitor Analysis")
 
-tablelist = []
+lowbidsValues = []
+otherbidsValues = []
 
 
 
-def getvalues():
-
+def getvalues(ItemsTotal):
 
     tablehtml = page.inner_html("xpath=/html/body/section/div[3]/div[2]/div[2]/div/table")
-    print(tablehtml)
+    soup = bs(tablehtml, "html.parser")
+    rows = soup.find_all('strong')
 
-    # print(tablelist)
+    print(len(rows))
+
+    for row in rows:
+      dic = {}
+      dic["amount"] = row.get_text()
+
+      lowbidsValues.append(dic)
+      
+
+    print(lowbidsValues)
+    return lowbidsValues
+
 
 
 with sync_playwright() as p:
@@ -56,19 +68,15 @@ with sync_playwright() as p:
     # get to low bids
     page.locator("text=Low Bids").click()
 
+    time.sleep(2)
+
     # max out results show
-    # page.locator("span.num-page").locator("a").last.click()
+    page.locator("span.num-page").locator("a").last.click()
+    
+    TotalItems = int(page.locator("span.number-total").first.text_content())
+    print(TotalItems)
 
-    numberOfLowbids = int(page.locator("span.number-total").first.text_content())
-    print(numberOfLowbids)
-
-
-    # click on print
-    # page.locator("xpath=/html/body/section/div[3]/div[2]/div[1]/div/a[1]").click()
-    # print("done Project History Report")
-
-
-    getvalues()
+    getvalues(TotalItems)
 
 
     # # page.keyboard.press("Control+KeyR")
@@ -92,3 +100,4 @@ with sync_playwright() as p:
     
 
 
+print(sum(lowbidsValues))
