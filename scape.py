@@ -1,7 +1,9 @@
-import os, time
+import os, time, sys
+import pandas as pd
 from playwright.sync_api import sync_playwright 
 from dotenv import load_dotenv
 from fillSheet import *
+from bs4 import BeautifulSoup
 
 load_dotenv()  # take environment variables from .env.
 
@@ -14,16 +16,11 @@ tablelist = []
 
 def getvalues():
 
-    count = 1
-    for i in range(numberOfLowbids + 1):
 
-        getTR = page.locator("xpath=/html/body/div/div[3]/table[3]/tbody/tr[2]").text_content()
-        # tablelist.append(getTR)
-        print(getTR)
+    tablehtml = page.inner_html("xpath=/html/body/section/div[3]/div[2]/div[2]/div/table")
+    print(tablehtml)
 
-
-    
-        # print(tablelist)
+    # print(tablelist)
 
 
 with sync_playwright() as p:
@@ -59,10 +56,16 @@ with sync_playwright() as p:
     # get to low bids
     page.locator("text=Low Bids").click()
 
-    page.locator("span.num-page").locator("a").last.click()
+    # max out results show
+    # page.locator("span.num-page").locator("a").last.click()
 
     numberOfLowbids = int(page.locator("span.number-total").first.text_content())
     print(numberOfLowbids)
+
+
+    # click on print
+    # page.locator("xpath=/html/body/section/div[3]/div[2]/div[1]/div/a[1]").click()
+    # print("done Project History Report")
 
 
     getvalues()
@@ -81,9 +84,6 @@ with sync_playwright() as p:
     # print(numberOfOtherBids)
 
 
-    # # click on print
-    # page.locator("xpath=/html/body/section/div[3]/div[2]/div[1]/div/a[1]").click()
-    # print("done Project History Report")
 
     # time.sleep(1)
 
