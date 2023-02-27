@@ -1,4 +1,4 @@
-import os, time, sys
+import os, time, sys, re
 import pandas as pd
 from playwright.sync_api import sync_playwright 
 from dotenv import load_dotenv
@@ -36,8 +36,8 @@ def getvalues(ItemsTotal):
 
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=False, slow_mo=50)
-    # browser = p.chromium.launch(headless=True)
+    # browser = p.chromium.launch(headless=False, slow_mo=50)
+    browser = p.chromium.launch(headless=True)
 
     page = browser.new_page()
 
@@ -100,4 +100,13 @@ with sync_playwright() as p:
     
 
 
-print(sum(lowbidsValues))
+def setlowbidvalue(args):
+    sums = 0
+    for x in range(len(lowbidsValues)):
+    
+    currnum = re.sub('[$,]', '', lowbidsValues[x]['amount']) 
+    currnum = int(currnum)
+    sums = sums + currnum
+
+    gcn.updateCell(self, e3, sums)
+

@@ -23,7 +23,7 @@ class fillSheet:
         self.fillNamesList()
         return self.nameList
 
-    def updateCell(self, rowNum, colNum): 
+    def updateCell(self, cell, data): 
         return
 
     def getSheetDim(self):
