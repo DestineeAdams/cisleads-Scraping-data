@@ -22,31 +22,17 @@ click(S("#buttonLogin"))
 # fill out form
 click(S("//html/body/section/div[2]/div[3]/div[1]/form/div[1]/a[2]"))
 write(compname, into=S("#Keywords"))
-
-
-
-# try:
-    
-#     print("worked")
-
-# except LookupError as e:
-#     print(f"{e}, did not work")
-
-# selcet search results
-# wait_until(click(compname).exists)
 click(compname)
 
 # click low bid
 click("low Bids")
 
-# grab total number
-# LowbidsTotal = Text(S('.number-total')).value
-# print(LowbidsTotal)
-# print(TextField(S('.number-total')).value)
-
 # click print
 click("Print")
-time.sleep(3)
+
+# lowbids_cells =find_all(S(".locbid-cell", below="low bids", above="other bids"))
+# lowbids = [cell.web_element.text for cell in lowbids_cells]
+# print(lowbids)
 
 # save html
 html = driver.page_source
