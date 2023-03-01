@@ -16,6 +16,7 @@ driver = start_firefox(url, headless=True)
 
 # time.sleep(1)
 
+
 # login
 write(os.getenv("UN"), into="email:")
 write(os.getenv("PW"), into="password:")
@@ -52,6 +53,8 @@ print("done helium")
 
 kill_browser()
 
+
+# _____________________________________________________
 
 
 soup = BeautifulSoup(html, 'html.parser')
@@ -115,36 +118,4 @@ with open('lowbids.html', 'w') as f:
 
 with open('otherbids.html', 'w') as f:
     f.write(str(prices[1]))
-
-# x = re.findall("ai", txt)
-
-lowbidLen = len(prices[0])
-otherbidLen = len(prices[1])
-
-
-print(f'prices[0] len is ------------------------------------------------------------------------ {lowbidLen}')
-print(f'prices[1] len is ------------------------------------------------------------------------ {otherbidLen}')
-
-
-
-with open("lowbids.html") as fp:
-    soup = BeautifulSoup(fp, 'html.parser')
-    
-    for i in range(0, lowbidLen):
-        prices[0][i] = soup.find("strong").get_text()
-
-print(prices[0])
-
-
-with open("otherbids.html") as fp:
-    soup = BeautifulSoup(fp, 'html.parser')
-    
-    for i in range(0, otherbidLen):
-        prices[1][i] = soup.find("strong").get_text()
-
-print(prices[1])
-
-
-print("done bs4")
-
 
