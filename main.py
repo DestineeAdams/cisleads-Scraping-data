@@ -61,20 +61,88 @@ getTables = soup.find_all("table")
 print(f'getTables len is {len(getTables)}')
 
 Tables = [getTables[2], getTables[3]] 
-# print(Tables)
 
-Tables[0] = soup.find_all("td", class_="locbid-cell") #low
-Tables[1] = soup.find_all("td", class_="locbid-cell")   #other
+print(f'Tables len is {len(Tables)}')
 
-prices = copy.deepcopy(Tables)
-prices[0] = soup.find_all("strong")
-prices[1] = soup.find_all("strong")
+
+with open('lowbids.html', 'w') as f:
+    data = str(Tables[0])
+    f.write(data)
+
+with open('otherbids.html', 'w') as f:
+    data = str(Tables[1])
+    f.write(data)
+
+
+# get prices
+prices = []
+
+
+with open("otherbids.html") as fp:
+    soup = BeautifulSoup(fp, 'html.parser')
+    prices.append(soup.find_all("td", class_="locbid-cell"))
+
+
+with open("lowbids.html") as fp:
+    soup = BeautifulSoup(fp, 'html.parser')
+    prices.append(soup.find_all("td", class_="locbid-cell"))
+
+print(f'prices len is {len(prices)}')
+
+
+with open('lowbids.html', 'w') as f:
+    f.write(str(prices[0]))
+
+with open('otherbids.html', 'w') as f:
+    f.write(str(prices[1]))
+
+
+
+# grab prices
+
+with open("otherbids.html") as fp:
+    soup = BeautifulSoup(fp, 'html.parser')
+    prices[0] = soup.find_all("strong")
+
+
+with open("lowbids.html") as fp:
+    soup = BeautifulSoup(fp, 'html.parser')
+    prices[1] = soup.find_all("strong")
+
+
+with open('lowbids.html', 'w') as f:
+    f.write(str(prices[0]))
+
+with open('otherbids.html', 'w') as f:
+    f.write(str(prices[1]))
 
 # x = re.findall("ai", txt)
 
-with open('index.html', 'w') as f:
-    data = str(Tables)
-    f.write(data)
+lowbidLen = len(prices[0])
+otherbidLen = len(prices[1])
+
+
+print(f'prices[0] len is ------------------------------------------------------------------------ {lowbidLen}')
+print(f'prices[1] len is ------------------------------------------------------------------------ {otherbidLen}')
+
+
+
+with open("lowbids.html") as fp:
+    soup = BeautifulSoup(fp, 'html.parser')
+    
+    for i in range(0, lowbidLen):
+        prices[0][i] = soup.find("strong").get_text()
+
+print(prices[0])
+
+
+with open("otherbids.html") as fp:
+    soup = BeautifulSoup(fp, 'html.parser')
+    
+    for i in range(0, otherbidLen):
+        prices[1][i] = soup.find("strong").get_text()
+
+print(prices[1])
 
 
 print("done bs4")
