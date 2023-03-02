@@ -1,7 +1,6 @@
 from openpyxl import load_workbook, Workbook
 import json
 
-
 class fillSheet:
 
     def __init__(self, wbname, wsname):
@@ -39,9 +38,8 @@ class fillSheet:
     
 
 
-
-f = fillSheet('Perfetto Bid History Template.xlsx', "Competitor Analysis")
-# f.fillNamesList()
-# f.getNamesList()
-# print(f.getNamesList())
+filepath = r'C:\Users\des11\OneDrive\Desktop\cisleads-Scraping-data\Perfetto Bid History Template.xlsx'
+f = fillSheet(filepath, "Competitor Analysis")
+# print(f.getNumOfRow())
 # print(f.getSheetDim(), f.getNumOfCol(), f.getNumOfRow())
+
