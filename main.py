@@ -62,8 +62,8 @@ for i in range(1, dimensions[0]):
 # grab table html for each name on list on site
 def grabTableHtml(index):
     
-    driver = start_firefox("https://cisleads.com/?login=1", headless=False)
-    # driver = start_firefox("https://cisleads.com/?login=1", headless=True)
+    # driver = start_firefox("https://cisleads.com/?login=1", headless=False)
+    driver = start_firefox("https://cisleads.com/?login=1", headless=True)
 
     
     # login
@@ -90,7 +90,7 @@ def grabTableHtml(index):
     
     # end
     kill_browser()
-    print("done helium")
+    # print("done helium")
     
     return html
 
@@ -101,7 +101,7 @@ def prase():
     getTables = soup.find_all("table")
     Tables = [getTables[2], getTables[3]]
     
-    print(Tables)
+    # print(Tables)
     
     with open("lowbids.html", "w") as f:
         data = str(Tables[0])
@@ -140,7 +140,7 @@ def getlowBidsSum(index):
 
 
     info[index]["low"] = sum(prices)
-    print(info[index]["low"])
+    # print(info[index])
 
 
 
@@ -172,7 +172,7 @@ def getotherBidsSum(index):
 
 
     info[index]["other"] = sum(prices)
-    print(info[index]["other"])
+    # print(info[index])
 
  
             
@@ -188,14 +188,18 @@ def getotherBidsSum(index):
 
 for index in range(0, len(info)):
     
-    # html = grabTableHtml(index)
+    html = grabTableHtml(index)
     # print(html)
     
-    # prase()
+    prase()
     
     getlowBidsSum(index)
     getotherBidsSum(index)
     
+    print(f"is i: {index} result is {info[index]}")
+    
 # for i in range(0, len(info)):   
 #     print(info[i]["name"])
     
+print("done")
+
