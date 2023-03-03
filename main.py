@@ -6,8 +6,8 @@ import openpyxl
 
 load_dotenv()  # take environment variables from .env.
 
-info = [[],[],[]] #name and prices in a this fromat [[{"name":"sum of prices low"},{...}],[{"name":"sum of prices other"},{...}]]
-info2 = [] # {"name":"compname", "low":0, "other":0}
+# info = [[],[],[]] #name and prices in a this fromat [[{"name":"sum of prices low"},{...}],[{"name":"sum of prices other"},{...}]]
+info = [] # {"name":"compname", "low":0, "other":0}
 
 headerValues = []
 listOfCompNames = []
@@ -43,20 +43,17 @@ for i in range(1, dimensions[0]):
  
     if ws.cell(row=i,column=1).value.lower() != "name":      
     
-        print(ws.cell(row=i,column=1).value)
+        # print(ws.cell(row=i,column=1).value)
         
-        info2.append({
+        info.append({
             "name": ws.cell(row=i,column=1).value, 
             "low": 0, 
             "other":0
         })
     
 
-# print(info[0])
-# print("--------------")
-# print(info[1])
-# print("--------------")
-# print(info[2])
+# print(info)
+
 
 
 
@@ -77,10 +74,10 @@ def grabTableHtml(index):
     
     # fill out form
     click(S("//html/body/section/div[2]/div[3]/div[1]/form/div[1]/a[2]"))
-    write(info[0][index], into=S("#Keywords"))
+    write(info[index]["name"], into=S("#Keywords"))
     
     time.sleep(1)
-    click(info[0][index])
+    click(info[index]["name"])
     
     # click print
     click("Print")
@@ -118,7 +115,7 @@ def prase():
 
 # prase the rawHTML.html for price of low bids
     # put sum in dict with company name
-def getlowBidsSum(compname, index):
+def getlowBidsSum(index):
     
     tds = None
     prices = []
@@ -142,8 +139,8 @@ def getlowBidsSum(compname, index):
             prices[i] = int(re.sub("[$,]", "", prices[i]))
 
 
-    info[1][index][compname] = sum(prices)
-    print(info[1][index])
+    info[index]["low"] = sum(prices)
+    print(info[index]["low"])
 
 
 
@@ -151,7 +148,7 @@ def getlowBidsSum(compname, index):
 
 # prase the html for price of Other bids
     # put sum in dict with company name
-def getotherBidsSum(compname, index):
+def getotherBidsSum(index):
     tds = None
     prices = []
 
@@ -174,8 +171,8 @@ def getotherBidsSum(compname, index):
             prices[i] = int(re.sub("[$,]", "", prices[i]))
 
 
-    info[1][index][compname] = sum(prices)
-    print(info[1][index])
+    info[index]["other"] = sum(prices)
+    print(info[index]["other"])
 
  
             
@@ -189,16 +186,16 @@ def getotherBidsSum(compname, index):
 
 # for loop to cylce thought list of name and grab html
 
-# for i in range(0, len(info[0])):
+for index in range(0, len(info)):
     
-#     # html = grabTableHtml(index)
-#     # print(html)
+    # html = grabTableHtml(index)
+    # print(html)
     
-#     # prase()
+    # prase()
     
-#     getlowBidsSum(compname, index)
-#     getotherBidsSum(compname, index)
+    getlowBidsSum(index)
+    getotherBidsSum(index)
     
-for i in range(0, len(info2)):   
-    print(info2[i]["name"])
+# for i in range(0, len(info)):   
+#     print(info[i]["name"])
     
