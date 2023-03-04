@@ -6,11 +6,9 @@ import openpyxl
 
 load_dotenv()  # take environment variables from .env.
 
-# info = [[],[],[]] #name and prices in a this fromat [[{"name":"sum of prices low"},{...}],[{"name":"sum of prices other"},{...}]]
 info = [] # {"name":"compname", "low":0, "other":0}
 
-headerValues = []
-listOfCompNames = []
+headerValues = {}
 html = None
 compname = None
 index = 4
@@ -30,7 +28,7 @@ dimensions = (ws.max_row+1, ws.max_column+1)
 
 # get header row coordinate and row values put then in dict
 for y in range (1, dimensions[1]):
-    headerValues.append({  
+    headerValues.update({ 
         ws.cell(row=1,column=y).value : ws.cell(row=1,column=y).coordinate
     })
     
@@ -54,9 +52,6 @@ for i in range(1, dimensions[0]):
 
 # print(info)
 
-
-
-
 # compname = info[0][index]
 
 # grab table html for each name on list on site
@@ -71,7 +66,7 @@ def grabTableHtml(index):
     write(os.getenv("PW"), into="password:")
     click(S("#buttonLogin"))
     
-    
+
     # fill out form
     click(S("//html/body/section/div[2]/div[3]/div[1]/form/div[1]/a[2]"))
     write(info[index]["name"], into=S("#Keywords"))
@@ -135,12 +130,24 @@ def getlowBidsSum(index):
         for i in range(len(strongs)):
             prices.append(strongs[i].get_text())
             
+        # fill price
         for i in range(len(prices)):
-            prices[i] = int(re.sub("[$,]", "", prices[i]))
+            try: 
+                prices[i] = int(re.sub("[$,]", "", prices[i]))
 
-
+            except ValueError:
+                print('A ValueError occurred')
+                prices[i] = 0   
+            
+            except TypeError:
+                print('A TypeError occurred')
+                prices[i] = 0
+                
+     
+        # print(prices)
+        
     info[index]["low"] = sum(prices)
-    # print(info[index])
+    print(info[index])
 
 
 
@@ -167,9 +174,22 @@ def getotherBidsSum(index):
         for i in range(len(strongs)):
             prices.append(strongs[i].get_text())
             
+            
+            
         for i in range(len(prices)):
-            prices[i] = int(re.sub("[$,]", "", prices[i]))
-
+            try:
+                prices[i] = int(re.sub("[$,]", "", prices[i]))
+                
+            except ValueError:
+                print('A ValueError occurred')
+                prices[i] = 0
+                
+            
+            except TypeError:
+                print('A TypeError occurred')
+                prices[i] = 0
+                
+        # print(prices)
 
     info[index]["other"] = sum(prices)
     # print(info[index])
@@ -179,27 +199,58 @@ def getotherBidsSum(index):
 
 
 # update excel file
+# print(headerValues)
+print(headerValues["2022 Low $ (Sum of all Low Bids)"])
+print(info)
+
+
+
+
+
+
+
+
 
 
 # display in gui
 
 
+
+
+
+
+
+
+
+
+
 # for loop to cylce thought list of name and grab html
 
-for index in range(0, len(info)):
+# for index in range(0, len(info)):
     
-    html = grabTableHtml(index)
-    # print(html)
+#     html = grabTableHtml(index)
+#     # print(html)
     
-    prase()
+#     prase()
     
-    getlowBidsSum(index)
-    getotherBidsSum(index)
+#     getlowBidsSum(index)
+#     getotherBidsSum(index)
     
-    print(f"is i: {index} result is {info[index]}")
+#     print(f"is i: {index} result is {info[index]}")
     
 # for i in range(0, len(info)):   
 #     print(info[i]["name"])
     
-print("done")
+# print("done")
+
+
+# html = grabTableHtml(10)
+# print(html)
+
+# prase()
+
+# getlowBidsSum(index)
+# getotherBidsSum(index)
+
+# print(f"is i: {index} result is {info[index]}")
 
