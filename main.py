@@ -199,12 +199,10 @@ def getotherBidsSum(index):
 
 
 # update excel file
-# print(headerValues)
-print(headerValues["2022 Low $ (Sum of all Low Bids)"])
-print(info)
-
-
-
+def updateCell(name):
+    for i in range(len(info)):
+        if info[i][name] == "x":
+            ws[headerValues[index]] = info[i][name]
 
 
 
@@ -254,3 +252,4 @@ print(info)
 
 # print(f"is i: {index} result is {info[index]}")
 
+# updateCell()
