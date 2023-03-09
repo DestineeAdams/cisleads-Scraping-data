@@ -3,39 +3,42 @@ from dotenv import load_dotenv
 from helium import *
 from bs4 import BeautifulSoup
 import openpyxl
+from openpyxl.utils import get_column_letter
 
-load_dotenv()  # take environment variables from .env.
+import tkinter as tk
+
+someText = "this is label 2"
+
+root = tk.Tk()
+
+root.geometry("800x500")
+root.title("cis webspacing")
+
+label1 = tk.Label(root, text="hello world", font=("san-seif", 12))
+# label1.pack(padx=20, pady=20)
+
+label2 = tk.Label(root, text=someText, font=("san-seif", 12))
+# label2.pack(padx=20, pady=20)
+
+
+textBox = tk.Text(root, height=3, font=("san-seif", 12))
+# textBox.pack(padx=20, pady=20)
+
+
+label3 = tk.Label(root, text="input box: ", font=("san-seif", 12))
+# label3.pack(padx=20, pady=20)
+label3.grid(row = 1, column = 1, pady=2)
+
+
+input = tk.Entry(root, width=50, font=("san-seif", 12))
+# input.pack(padx=20, pady=20)
+input.grid(row = 1, column = 2, pady = 2)
 
 
 
-# driver = start_firefox("https://cisleads.com/?login=1", headless=False)
-driver = start_firefox("https://cisleads.com/?login=1", headless=True)
+button = tk.Button(root, text="click me", font=("san-seif", 12))
+# button.pack(padx=20, pady=20)
+button.grid(row = 2, column = 1, pady = 2)
 
 
-# login
-write(os.getenv("UN"), into="email:")
-write(os.getenv("PW"), into="password:")
-click(S("#buttonLogin"))
-
-
-# fill out form
-click(S("//html/body/section/div[2]/div[3]/div[1]/form/div[1]/a[2]"))
-write(info[index]["name"], into=S("#Keywords"))
-
-time.sleep(1)
-click(info[index]["name"])
-
-# click print
-click("Print")
-
-time.sleep(5) # with for page to load
-
-# save html
-html = driver.page_source
-# print(html)
-
-# end
-kill_browser()
-# print("done helium")
-
-return html
+root.mainloop()

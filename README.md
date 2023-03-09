@@ -11,6 +11,5 @@
 - [ What is an EXE file? ](https://youtu.be/r5ldP1P1Rzc)
 - [ Playwright Text Selector ](https://www.youtube.com/watch?v=INQHTvOJ8go)
 - [Openpyxl Tutorial](https://www.pythonexcel.com/openpyxl.php)
-
-
+- [Python Tkinter Tutorial](https://www.geeksforgeeks.org/python-tkinter-tutorial/)
 ----------------------------------------------------------

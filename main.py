@@ -3,15 +3,20 @@ from dotenv import load_dotenv
 from helium import *
 from bs4 import BeautifulSoup
 import openpyxl
+from openpyxl.utils import get_column_letter
+
 
 load_dotenv()  # take environment variables from .env.
 
-info = [] # {"name":"compname", "low":0, "other":0}
+info = [] # {"name":"compname", "rowNumber": "row" ,"low":0, "other":0}
 
 headerValues = {}
 html = None
 compname = None
-index = 4
+index = 10
+currdictName = ""
+colLow = 5 #location of the low bibs col
+colLowPlusOther = 6 #location of the Low + Other
 
 # grab excel file
 filepath = r"Perfetto Bid History Template.xlsx"
@@ -45,20 +50,20 @@ for i in range(1, dimensions[0]):
         
         info.append({
             "name": ws.cell(row=i,column=1).value, 
+            "rowNumber": i,
             "low": 0, 
             "other":0
         })
-    
+
 
 # print(info)
-
-# compname = info[0][index]
+# currdictName = info[index]["name"] # get 
 
 # grab table html for each name on list on site
-def grabTableHtml(index):
+def grabTableHtml(index, currdictName):
     
-    # driver = start_firefox("https://cisleads.com/?login=1", headless=False)
-    driver = start_firefox("https://cisleads.com/?login=1", headless=True)
+    driver = start_firefox("https://cisleads.com/?login=1", headless=False)
+    # driver = start_firefox("https://cisleads.com/?login=1", headless=True)
 
     
     # login
@@ -69,10 +74,10 @@ def grabTableHtml(index):
 
     # fill out form
     click(S("//html/body/section/div[2]/div[3]/div[1]/form/div[1]/a[2]"))
-    write(info[index]["name"], into=S("#Keywords"))
+    write(currdictName, into=S("#Keywords"))
     
     time.sleep(1)
-    click(info[index]["name"])
+    click(currdictName)
     
     # click print
     click("Print")
@@ -89,6 +94,7 @@ def grabTableHtml(index):
     
     return html
 
+# print(html)
 
 # put raw table html into a file
 def prase():
@@ -96,7 +102,7 @@ def prase():
     getTables = soup.find_all("table")
     Tables = [getTables[2], getTables[3]]
     
-    # print(Tables)
+ 
     
     with open("lowbids.html", "w") as f:
         data = str(Tables[0])
@@ -134,23 +140,21 @@ def getlowBidsSum(index):
         for i in range(len(prices)):
             try: 
                 prices[i] = int(re.sub("[$,]", "", prices[i]))
+                # print(prices)
 
             except ValueError:
-                print('A ValueError occurred')
+                print('A ValueError occurred getlowBidsSum')
                 prices[i] = 0   
             
             except TypeError:
-                print('A TypeError occurred')
+                print('A TypeError occurred getlowBidsSum')
                 prices[i] = 0
                 
      
         # print(prices)
         
     info[index]["low"] = sum(prices)
-    print(info[index])
-
-
-
+    # print(info[index])
    
 
 # prase the html for price of Other bids
@@ -179,14 +183,15 @@ def getotherBidsSum(index):
         for i in range(len(prices)):
             try:
                 prices[i] = int(re.sub("[$,]", "", prices[i]))
-                
+                # print(prices)
+
             except ValueError:
-                print('A ValueError occurred')
+                print('A ValueError occurred getotherBidsSum')
                 prices[i] = 0
                 
             
             except TypeError:
-                print('A TypeError occurred')
+                print('A TypeError occurred getotherBidsSum')
                 prices[i] = 0
                 
         # print(prices)
@@ -195,61 +200,98 @@ def getotherBidsSum(index):
     # print(info[index])
 
  
-            
+#  update low excel cells
+def updateLowPricesCell(col):
 
-
-# update excel file
-def updateCell(name):
     for i in range(len(info)):
-        if info[i][name] == "x":
-            ws[headerValues[index]] = info[i][name]
+        letter = get_column_letter(col)
 
+   
+        # print(ws[letter + str(info[i]["rowNumber"])].value)
+        ws[letter + str(info[i]["rowNumber"])] = info[i]["low"]
 
+#  update others bids excel cells
+def updateLowplusOtherbids(col):
 
+    for i in range(len(info)):
+        letter = get_column_letter(col)
+
+   
+        # print(ws[letter + str(info[i]["rowNumber"])].value)
+        ws[letter + str(info[i]["rowNumber"])] = info[i]["other"] + info[i]["low"]
 
 
 
 
 # display in gui
-
-
-
-
-
-
-
+def updateDisplay():
+    pass
 
 
 
 
 # for loop to cylce thought list of name and grab html
+for i in range(0, len(info)):
+    
+    index = i
+    try:
+        html = grabTableHtml(index, info[index]["name"])
+        # print(html)
+        
+        prase()
+        
+        getlowBidsSum(index)
+        getotherBidsSum(index)
+        
+        # print(f"is i: {index} result is {info[index]}")
+        
+        updateLowPricesCell(colLow)
+        updateLowplusOtherbids(colLowPlusOther)
+        wb.save(filepath)
+        
+        print(f" grabed {info[index]['name']} data")
+        
+    
+    except PermissionError:
+        print('PermissionError')
+        print('close the excel sheet')
+    
+    except selenium.common.exceptions.WebDriverException:
+        print('selenium.common.exceptions.WebDriverException')
+        print('tring angain')
+        
+        html = grabTableHtml(index)
+        # print(html)
+        
+        prase()
+        
+        getlowBidsSum(index)
+        getotherBidsSum(index)
+        
+        # print(f"is i: {index} result is {info[index]}")
+        
+        updateLowPricesCell(colLow)
+        updateLowplusOtherbids(colLowPlusOther)
+        wb.save(filepath)
+        
+        print(f" grabed {info[index]['name']} data")
+    
+    print("COMPLETE")
 
-# for index in range(0, len(info)):
     
-#     html = grabTableHtml(index)
-#     # print(html)
-    
-#     prase()
-    
-#     getlowBidsSum(index)
-#     getotherBidsSum(index)
-    
-#     print(f"is i: {index} result is {info[index]}")
-    
-# for i in range(0, len(info)):   
-#     print(info[i]["name"])
-    
-# print("done")
 
 
-# html = grabTableHtml(10)
-# print(html)
 
+# #run a single time
+# html = grabTableHtml(index)
+# # print(html)
 # prase()
-
 # getlowBidsSum(index)
 # getotherBidsSum(index)
 
-# print(f"is i: {index} result is {info[index]}")
+# updateLowPricesCell(colLow)
+# updateLowplusOtherbids(colLowPlusOther)
 
-# updateCell()
+# wb.save(filepath)
+
+
