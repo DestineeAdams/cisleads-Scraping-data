@@ -4,6 +4,7 @@ from helium import *
 from bs4 import BeautifulSoup
 import openpyxl
 from openpyxl.utils import get_column_letter
+import tkinter as tk
 
 
 load_dotenv()  # take environment variables from .env.
@@ -60,10 +61,10 @@ for i in range(1, dimensions[0]):
 # currdictName = info[index]["name"] # get 
 
 # grab table html for each name on list on site
-def grabTableHtml(index, currdictName):
-    
-    driver = start_firefox("https://cisleads.com/?login=1", headless=False)
-    # driver = start_firefox("https://cisleads.com/?login=1", headless=True)
+def grabTableHtml(index):
+    currdictName = info[index]["name"]
+    # driver = start_firefox("https://cisleads.com/?login=1", headless=False)
+    driver = start_firefox("https://cisleads.com/?login=1", headless=True)
 
     
     # login
@@ -223,19 +224,12 @@ def updateLowplusOtherbids(col):
 
 
 
-# display in gui
-def updateDisplay():
-    pass
-
-
-
-
-# for loop to cylce thought list of name and grab html
+# # for loop to cylce thought list of name and grab html
 for i in range(0, len(info)):
     
     index = i
     try:
-        html = grabTableHtml(index, info[index]["name"])
+        html = grabTableHtml(index)
         # print(html)
         
         prase()
@@ -275,14 +269,15 @@ for i in range(0, len(info)):
         wb.save(filepath)
         
         print(f" grabed {info[index]['name']} data")
+        
     
     print("COMPLETE")
 
-    
 
 
 
-# #run a single time
+
+#run a single time
 # html = grabTableHtml(index)
 # # print(html)
 # prase()
