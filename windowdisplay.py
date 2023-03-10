@@ -25,16 +25,15 @@ class MyGUI:
         
         # form
         self.pane = Frame(self.root).pack(fill = BOTH, expand = False)
+        self.wrapperdisplayData = LabelFrame(self.pane, text="data").pack(fill= "both", expand="yes", padx=20, pady=20)
         self.Form()
-        wrapperdisplayData = LabelFrame(self.pane, text="data").pack(fill= "both", expand="yes", padx=20, pady=20)
-
         
         
         # --------------------------------
         
         
         self.pane2 = Frame(self.root).pack(fill = BOTH, expand = True)
-        wrapperForm = LabelFrame(self.pane2, text="form").pack(fill= "both", expand="yes", padx=20, pady=20)
+        self.wrapperForm = LabelFrame(self.pane2, text="form").pack(fill= "both", expand="yes", padx=20, pady=20)
         self.displayData()
         
         
@@ -64,46 +63,54 @@ class MyGUI:
         keysTuple = tuple(infodict.keys())
         keysList = list(infodict.keys())
         
-        print(infodict[keysList[0]][0])
         
-        tv = ttk.Treeview(self.pane2 , columns=keysTuple, show='headings' , height=len(keysTuple), selectmode="extended")
+        # for i in range(len(infodict["Name"])):
+        
+        #     rowlist = []
+            
+        #     for j in range(len(keysList)):
+        #         # currRow = ""
+        #         # currRow = currRow + f"{infodict[keysList[i]][i]}"
+                
+        #         # (infodict["Name"][i], infodict["# Times Competed Against Perfetto Contracting Co"][i])
+        #         rowlist.append(infodict[keysList[j]][i])
+                
+        #     rowTuple = tuple(rowlist)
+        #     print(rowTuple)
+        
+        # print(len(infodict["Name"]))
+        
+        
+        
+        
+        
+        tv = ttk.Treeview(self.wrapperdisplayData , columns=keysTuple, show='headings' , height=20, selectmode="extended")
    
         tv.column('#0', width=0, stretch=YES)
         tv.heading('#0', text='', anchor=CENTER)
         
-        for i in range(len(keysTuple)):
-            tv.column(keysList[i], anchor=CENTER, width=80)
-            tv.heading(keysList[i], text=keysList[i], anchor=CENTER)
-            
-            # tv.insert(parent='', index=1, iid=2, text='', values= (infodict[keysList[0]][0]))
+        for k in range(len(keysList)):
+            tv.heading(k, text=keysList[k], anchor=CENTER)
+            tv.column(keysList[k], anchor=CENTER, width=115)
         
+        for i in range(len(infodict["Name"])):
+
+       
+            rowlist = []
+            for j in range(len(keysList)):
+                
+                rowlist.append(infodict[keysList[j]][i])
+                
+            rowTuple = tuple(rowlist)
+            tv.insert("", "end", values=rowTuple)
+
+            print(rowTuple)
+        
+   
      
         tv.pack()
         
-        # for item in range(0, 144):
-        #     insertInfo = ""
-           
-        #     for j in range(0, len(keys)):
-        #         insertInfo = insertInfo + f'{keys[j]} is: {infodict[keys[j]][item]} | '
-        
-        #     self.lobBidcoor = Label(self.pane2, text=insertInfo, font=("san-seif", textSize)).pack()
-        
-
-    
-        
-        # keys = list(infodict.keys())
-        
-        # for item in range(0, 144):
-        #     insertInfo = ""
-           
-        #     for j in range(0, len(keys)):
-        #         insertInfo = insertInfo + f'{keys[j]} is: {infodict[keys[j]][item]} | '
-        
-        #     self.lobBidcoor = Label(self.pane2, text=insertInfo, font=("san-seif", textSize)).pack()
-        
-
-       
-        
+     
         scrollbar = ttk.Scrollbar(self.pane2, orient='horizontal', command=tv.xview)
         tv.configure(xscroll=scrollbar.set)
         scrollbar.pack(fill = X)
