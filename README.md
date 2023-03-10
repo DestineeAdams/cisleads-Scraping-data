@@ -12,4 +12,8 @@
 - [ Playwright Text Selector ](https://www.youtube.com/watch?v=INQHTvOJ8go)
 - [Openpyxl Tutorial](https://www.pythonexcel.com/openpyxl.php)
 - [Python Tkinter Tutorial](https://www.geeksforgeeks.org/python-tkinter-tutorial/)
+- [Python Excel - Reading Excel files with Pandas read_excel](https://www.youtube.com/watch?v=bI68wnoINwc&t=56s)
+-[Using Tkinter Treeview to display tabular data](https://www.pythontutorial.net/tkinter/tkinter-treeview/)
+
+-[SCROLLBAR IN TKINTER](https://python-tricks.com/scrollbar-in-tkinter/)
 ----------------------------------------------------------
