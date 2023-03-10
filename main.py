@@ -5,11 +5,14 @@ from bs4 import BeautifulSoup
 import openpyxl
 from openpyxl.utils import get_column_letter
 import tkinter as tk
+from windowdisplay import *
+
+c = windowdisplay()
 
 
 load_dotenv()  # take environment variables from .env.
-
 info = [] # {"name":"compname", "rowNumber": "row" ,"low":0, "other":0}
+
 
 headerValues = {}
 html = None
@@ -20,11 +23,12 @@ colLow = 5 #location of the low bibs col
 colLowPlusOther = 6 #location of the Low + Other
 
 # grab excel file
-filepath = r"Perfetto Bid History Template.xlsx"
-sheetname = "Competitor Analysis"
+filepath = c.Getpath()
+# sheetname = "Competitor Analysis"
     
 wb = openpyxl.load_workbook(filepath)
-ws = wb[sheetname]
+# ws = wb[sheetname]
+ws = wb.active
 
 
 # get sheet dimensionm
@@ -224,69 +228,78 @@ def updateLowplusOtherbids(col):
 
 
 
-# # for loop to cylce thought list of name and grab html
-for i in range(0, len(info)):
+
+
+'''
+            #### all function callls are below this comment ####
+
+'''
+
+
+
+# for loop to cylce thought list of name and grab html
+# for i in range(0, len(info)):
     
-    index = i
-    try:
-        html = grabTableHtml(index)
-        # print(html)
+#     index = i
+#     try:
+#         html = grabTableHtml(index)
+#         # print(html)
         
-        prase()
+#         prase()
         
-        getlowBidsSum(index)
-        getotherBidsSum(index)
+#         getlowBidsSum(index)
+#         getotherBidsSum(index)
         
-        # print(f"is i: {index} result is {info[index]}")
+#         # print(f"is i: {index} result is {info[index]}")
         
-        updateLowPricesCell(colLow)
-        updateLowplusOtherbids(colLowPlusOther)
-        wb.save(filepath)
+#         updateLowPricesCell(colLow)
+#         updateLowplusOtherbids(colLowPlusOther)
+#         wb.save(filepath)
         
-        print(f" grabed {info[index]['name']} data")
-        
-    
-    except PermissionError:
-        print('PermissionError')
-        print('close the excel sheet')
-    
-    except selenium.common.exceptions.WebDriverException:
-        print('selenium.common.exceptions.WebDriverException')
-        print('tring angain')
-        
-        html = grabTableHtml(index)
-        # print(html)
-        
-        prase()
-        
-        getlowBidsSum(index)
-        getotherBidsSum(index)
-        
-        # print(f"is i: {index} result is {info[index]}")
-        
-        updateLowPricesCell(colLow)
-        updateLowplusOtherbids(colLowPlusOther)
-        wb.save(filepath)
-        
-        print(f" grabed {info[index]['name']} data")
+#         # print(f" grabed {info[index]['name']} data")
         
     
-    print("COMPLETE")
+#     except PermissionError:
+#         print('PermissionError')
+#         print('close the excel sheet')
+    
+#     except selenium.common.exceptions.WebDriverException:
+#         print('selenium.common.exceptions.WebDriverException')
+#         print('tring angain')
+        
+#         html = grabTableHtml(index)
+#         # print(html)
+        
+#         prase()
+        
+#         getlowBidsSum(index)
+#         getotherBidsSum(index)
+        
+#         # print(f"is i: {index} result is {info[index]}")
+        
+#         updateLowPricesCell(colLow)
+#         updateLowplusOtherbids(colLowPlusOther)
+#         wb.save(filepath)
+        
+#         # print(f" grabed {info[index]['name']} data")
+        
+#         c.refesh()
+#     print("COMPLETE")
 
 
 
 
 
-#run a single time
-# html = grabTableHtml(index)
-# # print(html)
-# prase()
-# getlowBidsSum(index)
-# getotherBidsSum(index)
+# run a single time
+html = grabTableHtml(index)
+# print(html)
+prase()
+getlowBidsSum(index)
+getotherBidsSum(index)
 
-# updateLowPricesCell(colLow)
-# updateLowplusOtherbids(colLowPlusOther)
+updateLowPricesCell(colLow)
+updateLowplusOtherbids(colLowPlusOther)
 
-# wb.save(filepath)
-
+wb.save(filepath)
+print("done")
 
